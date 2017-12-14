@@ -18,17 +18,17 @@ void  Enquadramento::envia(unsigned char * buffer, int bytes){
 	//Debug
 	//cout << "\n\nMensagem no Buffer              :     " ;
 	//cout.write((char*) buffer, bytes);
-	cout << "\nBuffer Hex sem enquadramento: "<< bytes << ":    ";
+	/*cout << "\nBuffer Hex sem enquadramento: "<< bytes << ":    ";
 	for(int u = 0; u<bytes; u++){
 		if(buffer[u] == 0x7E || buffer[u] == 0x7D){printf("   ");}
 		printf(" %x", buffer[u]);
-	}
+	}*/
 	
 	// Gera CRC e adiciona  ao buffer
 	gen_crc( buffer,bytes);
 	
 	//Debug
-	cout << "\nBuffer Hex com CRC:           "<< bytes + 2<< ":    ";
+	cout << "\nBuffer TX Hex com CRC:           "<< bytes + 2<< ":    ";
 	for(int u = 0; u<bytes+2; u++){
 		//cout << " " << hex << char(buffer[u]) ;
 		if(buffer[u] == 0x7E || buffer[u] == 0x7D){printf("   ");}
@@ -53,15 +53,11 @@ void  Enquadramento::envia(unsigned char * buffer, int bytes){
 	j++;
 	
 	//Debug
-	cout << "\nBuffer Hex com enquadramento: " << j << ": ";
+	/*cout << "\nBuffer Hex com enquadramento: " << j << ": ";
 	for(int u = 0; u<j; u++){
 		printf(" %x", aux_buffer[u]);
-	}
+	}*/
 	
-        //ARQ
-        //arq enviar('d');
-        //auto encap = enviar.mensagem(buffer,bytes);
-
 	// Envia o frame	
 	int n = 0;
 	if( (j>=min_bytes) && (j<=max_bytes) ){		
@@ -86,14 +82,16 @@ int  Enquadramento::recebe(unsigned char* buffer){
 	}
 	
 	printf("\n\nMensagem recebida !!!  ");
+	//printf(n_bytes);
+	cout << "\nBuffer RX Hex com CRC:           "<< n_bytes ;
 	//-------------------------------------------
 	_crc = check_crc(buffer, n_bytes);
 	if(_crc){
-			printf ("\nCRC Ok! ");
+			printf ("        CRC Ok! ");
 			return n_bytes;
 	}else{
-			printf ("\nCRC ERROR!");
-			return 0;
+			printf ("        CRC ERROR!");
+			return -1;
 	}	
 		
 	
